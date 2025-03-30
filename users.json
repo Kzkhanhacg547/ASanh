@@ -1,0 +1,11 @@
+[
+  {
+    "username": "admin",
+    "password": "$2b$10$4AaFm9yPslW08DWSV5hm6.qKfZKMLBrff7Oyjgn1IJxdULKavtmpi",
+    "isAdmin": true
+  },
+  {
+    "username": "kz",
+    "password": "$2b$10$ZsgRvNYb7YF05RjZKDVPXes.6PcVrJ/NUwQ/ji0WWQ4ggh8ugCfI."
+  }
+]
