@@ -7,25 +7,28 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const app = express();
 const port = 3000;
- 
+
+// Email configuration
 const adminEmail = 'basilmailtd@gmail.com';
 const adminPassword = 'uzxtolejmfoyrzcd';
 const mailHost = 'smtp.gmail.com';
 const schoolAdminEmail = 'kzemytb547@gmail.com';
- 
+
+// Email transporter
 const transporter = nodemailer.createTransport({
   host: mailHost,
   port: 587,
   secure: false,
   auth: {
     user: adminEmail,
-    pass: adminPassword   
+    pass: adminPassword  // Fixed: changed 'password' to 'pass'
   },
   tls: {
-    rejectUnauthorized: false  
+    rejectUnauthorized: false  // Added for troubleshooting connection issues
   }
 });
- 
+
+// Middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static('public'));
@@ -35,21 +38,21 @@ app.use(session({
   secret: 'KzACG_secret_key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }  
+  cookie: { secure: false } // Set to true if using HTTPS
 }));
 
- 
+// Configure multer for temporary storage during processing
 const storage = multer.memoryStorage();
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 }  
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
- 
+// Helper functions
 function readJSONFile(filename) {
   try {
     if (!fs.existsSync(filename)) {
-       
+      // Create the file with empty array if it doesn't exist
       fs.writeFileSync(filename, JSON.stringify([]));
       return [];
     }
@@ -400,11 +403,745 @@ app.post('/admission', upload.array('transcriptImages', 8), async (req, res) => 
     }
 
     // Redirect to a success page or return success message
-    res.status(201).send('Application submitted successfully');
-  } catch (error) {
-    console.error('Admission application error:', error);
-    res.status(500).send('An error occurred while processing your application');
-  }
+      // On success - status 201
+      res.status(201).send(`
+        <!DOCTYPE html>
+        <html lang="vi">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Đăng Ký Thành Công - THPT A Sanh</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+                :root {
+                    --primary-color: #ff9ed8;
+                    --secondary-color: #ffd6ec;
+                    --accent-color: #ff6bbd;
+                    --success-color: #a6e3b8;
+                    --text-color: #4a4a4a;
+                    --light-text: #ffffff;
+                    --shadow-color: rgba(255, 158, 216, 0.3);
+                }
+
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    font-family: 'Quicksand', sans-serif;
+                }
+
+                body {
+                    background-color: #fffcfe;
+                    color: var(--text-color);
+                    line-height: 1.6;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px;
+                    background-image: 
+                        radial-gradient(circle at 10% 20%, rgba(255, 182, 225, 0.1) 10%, transparent 20%),
+                        radial-gradient(circle at 90% 30%, rgba(255, 182, 225, 0.1) 15%, transparent 25%),
+                        radial-gradient(circle at 40% 80%, rgba(255, 182, 225, 0.1) 20%, transparent 30%);
+                }
+
+                .response-container {
+                    max-width: 500px;
+                    text-align: center;
+                    background-color: white;
+                    border-radius: 25px;
+                    padding: 40px 30px;
+                    box-shadow: 0 15px 30px var(--shadow-color);
+                    position: relative;
+                    overflow: hidden;
+                    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+                }
+
+                .response-container::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 8px;
+                    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+                    border-top-left-radius: 20px;
+                    border-top-right-radius: 20px;
+                }
+
+                .success-icon {
+                    font-size: 4rem;
+                    color: var(--accent-color);
+                    background-color: var(--secondary-color);
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0 auto 20px;
+                    position: relative;
+                    animation: pulse 1.5s infinite;
+                }
+
+                .success-icon::after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    border: 3px solid var(--accent-color);
+                    animation: ripple 1.5s infinite;
+                }
+
+                .response-title {
+                    font-size: 2rem;
+                    color: var(--accent-color);
+                    margin-bottom: 15px;
+                    font-weight: 700;
+                }
+
+                .response-message {
+                    font-size: 1.1rem;
+                    margin-bottom: 25px;
+                    color: var(--text-color);
+                    line-height: 1.7;
+                }
+
+                .home-button {
+                    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                    color: white;
+                    border: none;
+                    padding: 12px 25px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    border-radius: 30px;
+                    cursor: pointer;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin-top: 15px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 5px 15px rgba(255, 107, 189, 0.4);
+                }
+
+                .home-button:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 20px rgba(255, 107, 189, 0.5);
+                }
+
+                .home-button:active {
+                    transform: translateY(0);
+                }
+
+                .decoration {
+                    position: absolute;
+                    z-index: -1;
+                }
+
+                .hearts {
+                    top: -30px;
+                    right: -20px;
+                    font-size: 2rem;
+                    color: var(--primary-color);
+                    opacity: 0.2;
+                    transform: rotate(20deg);
+                }
+
+                .stars {
+                    bottom: -25px;
+                    left: -15px;
+                    font-size: 2rem;
+                    color: var(--accent-color);
+                    opacity: 0.2;
+                    transform: rotate(-15deg);
+                }
+
+                /* Animations */
+                @keyframes bounceIn {
+                    0% { transform: scale(0.8); opacity: 0; }
+                    70% { transform: scale(1.05); }
+                    100% { transform: scale(1); opacity: 1; }
+                }
+
+                @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                }
+
+                @keyframes ripple {
+                    0% { transform: scale(1); opacity: 1; }
+                    100% { transform: scale(1.5); opacity: 0; }
+                }
+
+                /* Responsive */
+                @media (max-width: 600px) {
+                    .response-container {
+                        padding: 30px 20px;
+                    }
+
+                    .success-icon {
+                        width: 80px;
+                        height: 80px;
+                        font-size: 3rem;
+                    }
+
+                    .response-title {
+                        font-size: 1.7rem;
+                    }
+                }
+
+                /* Cute animations for the text */
+                .animated-text span {
+                    display: inline-block;
+                    animation: textBounce 1s ease forwards;
+                    opacity: 0;
+                }
+
+                @keyframes textBounce {
+                    0% { transform: translateY(10px); opacity: 0; }
+                    100% { transform: translateY(0); opacity: 1; }
+                }
+
+                .sparkles {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    z-index: 10;
+                }
+
+                .sparkle {
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    background-color: var(--accent-color);
+                    border-radius: 50%;
+                    opacity: 0;
+                    animation: sparkle 2s ease-in-out infinite;
+                }
+
+                @keyframes sparkle {
+                    0% { transform: scale(0); opacity: 0; }
+                    50% { transform: scale(1); opacity: 0.8; }
+                    100% { transform: scale(0); opacity: 0; }
+                }
+
+                /* Footer */
+                .footer {
+                    margin-top: 40px;
+                    font-size: 0.9rem;
+                    color: #888;
+                    text-align: center;
+                }
+
+                .school-name {
+                    color: var(--accent-color);
+                    font-weight: 600;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="response-container">
+                <div class="decoration hearts"><i class="fas fa-heart"></i><i class="fas fa-heart"></i><i class="fas fa-heart"></i></div>
+                <div class="decoration stars"><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+
+                <h1 class="response-title animated-text">
+                    <span style="animation-delay: 0.1s">Đ</span>
+                    <span style="animation-delay: 0.2s">ă</span>
+                    <span style="animation-delay: 0.3s">n</span>
+                    <span style="animation-delay: 0.4s">g</span>
+                    <span style="animation-delay: 0.5s"> </span>
+                    <span style="animation-delay: 0.6s">K</span>
+                    <span style="animation-delay: 0.7s">ý</span>
+                    <span style="animation-delay: 0.8s"> </span>
+                    <span style="animation-delay: 0.9s">T</span>
+                    <span style="animation-delay: 1.0s">h</span>
+                    <span style="animation-delay: 1.1s">à</span>
+                    <span style="animation-delay: 1.2s">n</span>
+                    <span style="animation-delay: 1.3s">h</span>
+                    <span style="animation-delay: 1.4s"> </span>
+                    <span style="animation-delay: 1.5s">C</span>
+                    <span style="animation-delay: 1.6s">ô</span>
+                    <span style="animation-delay: 1.7s">n</span>
+                    <span style="animation-delay: 1.8s">g</span>
+                    <span style="animation-delay: 1.9s">!</span>
+                </h1>
+
+                <p class="response-message">
+                    Đơn đăng ký tuyển sinh của bạn đã được gửi thành công! Nhà trường sẽ xem xét và liên hệ với bạn trong thời gian sớm nhất. Cảm ơn bạn đã đăng ký!
+                </p>
+
+                <a href="index.html" class="home-button">
+                    <i class="fas fa-home"></i> Trở về trang chủ
+                </a>
+            </div>
+
+            <div class="footer">
+                <p>&copy; 2025 <span class="school-name">Trường THPT A Sanh</span> - Nơi ươm mầm tương lai</p>
+            </div>
+
+            <div class="sparkles" id="sparkles"></div>
+
+            <script>
+                // Create animated sparkles
+                const sparklesContainer = document.getElementById('sparkles');
+
+                function createSparkles() {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+
+                    // Random position
+                    const posX = Math.random() * window.innerWidth;
+                    const posY = Math.random() * window.innerHeight;
+
+                    sparkle.style.left = posX + 'px';
+                    sparkle.style.top = posY + 'px';
+
+                    // Random size
+                    const size = Math.random() * 5 + 5;
+                    sparkle.style.width = size + 'px';
+                    sparkle.style.height = size + 'px';
+
+                    // Random delay
+                    sparkle.style.animationDelay = Math.random() * 2 + 's';
+
+                    sparklesContainer.appendChild(sparkle);
+
+                    // Remove sparkle after animation completes
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }
+
+                // Create sparkles periodically
+                setInterval(createSparkles, 300);
+
+                // Redirect after 10 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 10000);
+            </script>
+        </body>
+        </html>
+      `);
+    } catch (error) {
+      console.error('Admission application error:', error);
+
+      // On error - status 500
+      res.status(500).send(`
+        <!DOCTYPE html>
+        <html lang="vi">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Đã Xảy Ra Lỗi - THPT A Sanh</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+                :root {
+                    --primary-color: #ff9ed8;
+                    --secondary-color: #ffd6ec;
+                    --accent-color: #ff6bbd;
+                    --error-color: #ffafaf;
+                    --error-dark: #ff6b6b;
+                    --text-color: #4a4a4a;
+                    --light-text: #ffffff;
+                    --shadow-color: rgba(255, 158, 216, 0.3);
+                }
+
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    font-family: 'Quicksand', sans-serif;
+                }
+
+                body {
+                    background-color: #fffcfe;
+                    color: var(--text-color);
+                    line-height: 1.6;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px;
+                    background-image: 
+                        radial-gradient(circle at 10% 20%, rgba(255, 182, 225, 0.1) 10%, transparent 20%),
+                        radial-gradient(circle at 90% 30%, rgba(255, 182, 225, 0.1) 15%, transparent 25%),
+                        radial-gradient(circle at 40% 80%, rgba(255, 182, 225, 0.1) 20%, transparent 30%);
+                }
+
+                .response-container {
+                    max-width: 500px;
+                    text-align: center;
+                    background-color: white;
+                    border-radius: 25px;
+                    padding: 40px 30px;
+                    box-shadow: 0 15px 30px var(--shadow-color);
+                    position: relative;
+                    overflow: hidden;
+                    animation: shakeAnimation 0.6s cubic-bezier(.36,.07,.19,.97) both;
+                }
+
+                .response-container::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 8px;
+                    background: linear-gradient(90deg, var(--error-dark), var(--error-color));
+                    border-top-left-radius: 20px;
+                    border-top-right-radius: 20px;
+                }
+
+                .error-icon {
+                    font-size: 3.5rem;
+                    color: var(--error-dark);
+                    background-color: var(--error-color);
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0 auto 20px;
+                    position: relative;
+                    animation: pulsateError 1.5s infinite;
+                }
+
+                .error-icon::after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    border: 3px solid var(--error-dark);
+                    animation: ripple 1.5s infinite;
+                }
+
+                .response-title {
+                    font-size: 2rem;
+                    color: var(--error-dark);
+                    margin-bottom: 15px;
+                    font-weight: 700;
+                }
+
+                .response-message {
+                    font-size: 1.1rem;
+                    margin-bottom: 25px;
+                    color: var(--text-color);
+                    line-height: 1.7;
+                }
+
+                .retry-button {
+                    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                    color: white;
+                    border: none;
+                    padding: 12px 25px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    border-radius: 30px;
+                    cursor: pointer;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin: 15px 10px 0;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 5px 15px rgba(255, 107, 189, 0.4);
+                }
+
+                .home-button {
+                    background: rgba(255, 107, 189, 0.2);
+                    color: var(--accent-color);
+                    border: 2px solid var(--accent-color);
+                    padding: 12px 25px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    border-radius: 30px;
+                    cursor: pointer;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin: 15px 10px 0;
+                    transition: all 0.3s ease;
+                }
+
+                .retry-button:hover, .home-button:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 20px rgba(255, 107, 189, 0.3);
+                }
+
+                .retry-button:active, .home-button:active {
+                    transform: translateY(0);
+                }
+
+                .decoration {
+                    position: absolute;
+                    z-index: -1;
+                }
+
+                .clouds {
+                    top: -20px;
+                    right: -10px;
+                    font-size: 2rem;
+                    color: var(--error-color);
+                    opacity: 0.2;
+                    transform: rotate(20deg);
+                }
+
+                .raindrops {
+                    bottom: -25px;
+                    left: -15px;
+                    font-size: 2rem;
+                    color: var(--error-dark);
+                    opacity: 0.2;
+                    transform: rotate(-15deg);
+                }
+
+                /* Animations */
+                @keyframes shakeAnimation {
+                    10%, 90% {
+                        transform: translate3d(-1px, 0, 0);
+                    }
+                    20%, 80% {
+                        transform: translate3d(2px, 0, 0);
+                    }
+                    30%, 50%, 70% {
+                        transform: translate3d(-4px, 0, 0);
+                    }
+                    40%, 60% {
+                        transform: translate3d(4px, 0, 0);
+                    }
+                }
+
+                @keyframes pulsateError {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                }
+
+                @keyframes ripple {
+                    0% { transform: scale(1); opacity: 1; }
+                    100% { transform: scale(1.5); opacity: 0; }
+                }
+
+                /* Responsive */
+                @media (max-width: 600px) {
+                    .response-container {
+                        padding: 30px 20px;
+                    }
+
+                    .error-icon {
+                        width: 80px;
+                        height: 80px;
+                        font-size: 3rem;
+                    }
+
+                    .response-title {
+                        font-size: 1.7rem;
+                    }
+
+                    .action-buttons {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    .retry-button, .home-button {
+                        margin: 8px 0;
+                        width: 80%;
+                    }
+                }
+
+                /* Sad animation for the character */
+                .sad-character {
+                    width: 60px;
+                    height: 60px;
+                    margin: 10px auto;
+                    position: relative;
+                }
+
+                .sad-face {
+                    width: 100%;
+                    height: 100%;
+                    background-color: var(--secondary-color);
+                    border-radius: 50%;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .eyes {
+                    position: absolute;
+                    top: 25%;
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-evenly;
+                }
+
+                .eye {
+                    width: 8px;
+                    height: 8px;
+                    background-color: var(--text-color);
+                    border-radius: 50%;
+                }
+
+                .mouth {
+                    position: absolute;
+                    bottom: 25%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 30px;
+                    height: 10px;
+                    border-radius: 10px 10px 0 0;
+                    border-top: 3px solid var(--text-color);
+                }
+
+                .tear {
+                    position: absolute;
+                    top: 35%;
+                    width: 4px;
+                    height: 8px;
+                    background-color: #a8e4ff;
+                    border-radius: 50%;
+                    animation: tearFall 2s infinite;
+                }
+
+                .tear.left {
+                    left: 20%;
+                    animation-delay: 0.5s;
+                }
+
+                .tear.right {
+                    right: 20%;
+                    animation-delay: 1s;
+                }
+
+                @keyframes tearFall {
+                    0% { transform: translateY(0); opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { transform: translateY(25px); opacity: 0; }
+                }
+
+                /* Footer */
+                .footer {
+                    margin-top: 40px;
+                    font-size: 0.9rem;
+                    color: #888;
+                    text-align: center;
+                }
+
+                .school-name {
+                    color: var(--accent-color);
+                    font-weight: 600;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="response-container">
+                <div class="decoration clouds"><i class="fas fa-cloud"></i><i class="fas fa-cloud"></i></div>
+                <div class="decoration raindrops"><i class="fas fa-tint"></i><i class="fas fa-tint"></i></div>
+
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+
+                <div class="sad-character">
+                    <div class="sad-face">
+                        <div class="eyes">
+                            <div class="eye"></div>
+                            <div class="eye"></div>
+                        </div>
+                        <div class="tear left"></div>
+                        <div class="tear right"></div>
+                        <div class="mouth"></div>
+                    </div>
+                </div>
+
+                <h1 class="response-title">Đã Xảy Ra Lỗi</h1>
+
+                <p class="response-message">
+                    Rất tiếc, đã có lỗi xảy ra trong quá trình xử lý đơn đăng ký của bạn. Vui lòng thử lại sau hoặc liên hệ với nhà trường để được hỗ trợ.
+                </p>
+
+                <div class="action-buttons">
+                    <a href="javascript:history.back()" class="retry-button">
+                        <i class="fas fa-redo"></i> Thử lại
+                    </a>
+
+                    <a href="index.html" class="home-button">
+                        <i class="fas fa-home"></i> Trang chủ
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>&copy; 2025 <span class="school-name">Trường THPT A Sanh</span> - Nơi ươm mầm tương lai</p>
+            </div>
+
+            <script>
+                // Add some interactive elements
+                document.querySelector('.sad-face').addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 300);
+                });
+
+                // Add some random raindrops animation
+                function createRaindrop() {
+                    const raindrop = document.createElement('div');
+                    raindrop.style.position = 'absolute';
+                    raindrop.style.width = '2px';
+                    raindrop.style.height = '10px';
+                    raindrop.style.backgroundColor = '#a8e4ff';
+                    raindrop.style.borderRadius = '50%';
+                    raindrop.style.opacity = '0.7';
+
+                    // Random position
+                    const posX = Math.random() * window.innerWidth;
+                    raindrop.style.left = posX + 'px';
+                    raindrop.style.top = '-10px';
+
+                    // Animation
+                    raindrop.style.animation = 'fall 1.5s linear forwards';
+
+                    document.body.appendChild(raindrop);
+
+                    // Remove raindrop after animation
+                    setTimeout(() => {
+                        raindrop.remove();
+                    }, 1500);
+                }
+
+                // Create CSS for raindrop animation
+                const style = document.createElement('style');
+                style.textContent = """@keyframes fall {
+                        0% { transform: translateY(0); }
+                        100% { transform: translateY(${window.innerHeight}px); }
+                    }
+                """;
+                document.head.appendChild(style);
+
+                // Create raindrops periodically
+                setInterval(createRaindrop, 100);
+            </script>
+        </body>
+        </html>
+      `);
+    }
+
 });
 
 // Get all applications (admin access fixed)
