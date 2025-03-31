@@ -139,7 +139,7 @@
     .media-container {
         position: relative;
         width: 100%;
-        padding-top: 56.25%; /* 16:9 aspect ratio */
+        padding-top: 56.25%;  
         overflow: hidden;
         border-radius: 15px;
         box-shadow: 0 5px 15px rgba(255, 105, 180, 0.15);
@@ -579,12 +579,11 @@
 <body class="flex flex-col min-h-screen transition-colors duration-300">
     <header class="gradient-bg text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <div class="school-logo bg-white w-12 h-12 flex items-center justify-center">
-                    <img src="https://i.imgur.com/4Y68zbY.png" alt="School Logo" class="w-full h-full object-contain">
+            <div class="flex items-center space-x-2 sm:space-x-4 p-3">
+                <div class="school-logo bg-white w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full shadow-sm">
+                    <img src="https://i.imgur.com/4Y68zbY.png" alt="School Logo" class="w-4/5 h-4/5 object-contain">
                 </div>
-
-                <h1 class="text-2xl font-bold">Trường THPT A Sanh</h1>
+                <h1 class="text-lg sm:text-2xl font-bold truncate">Trường THPT A Sanh</h1>
             </div>
             <nav class="space-x-4 flex items-center">
                 <button id="loginButton" class="btn bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Đăng nhập</button>
@@ -802,7 +801,7 @@
             });
 
             let currentUser = null;
-            
+
             // Dark mode toggle
             darkModeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
@@ -865,10 +864,10 @@
                 } else {
                     // For base64 encoded files
                     if (!file.data || !file.contentType) return "<p>Invalid file data</p>";
-                    
+
                     const contentTypePrefix = file.contentType.split('/')[0];
                     const fileExtension = file.contentType.split('/')[1];
-                    
+
                     switch (contentTypePrefix) {
                         case 'application':
                             if (fileExtension === 'pdf') {
@@ -910,7 +909,7 @@
                     const postCard = document.createElement('div');
                     postCard.className = 'bg-white dark:bg-gray-800 shadow-md rounded p-4 card-hover mb-4 fade-in';
                     postCard.style.animationDelay = `${index * 0.1}s`;
-                    
+
                     // Format date
                     const postDate = new Date(post.date);
                     const formattedDate = postDate.toLocaleDateString('vi-VN', {
@@ -920,7 +919,7 @@
                         hour: '2-digit',
                         minute: '2-digit'
                     });
-                    
+
                     postCard.innerHTML = `
                         <h3 class="text-blue-700 font-bold text-lg dark:text-blue-300">${post.title}</h3>
                         <p class="text-gray-700 dark:text-gray-300 my-2">${post.content}</p>
