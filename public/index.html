@@ -922,7 +922,7 @@
 
                     postCard.innerHTML = `
                         <h3 class="text-blue-700 font-bold text-lg dark:text-blue-300">${post.title}</h3>
-                        <p class="text-gray-700 dark:text-gray-300 my-2">${post.content}</p>
+                        <p class="text-gray-700 dark:text-gray-300 my-2">${post.content.replace(/\n/g, '<br>')}</p>
                         <p class="text-sm text-gray-500 dark:text-gray-400">Đăng bởi ${post.author} vào ${formattedDate}</p>
                         ${post.files && post.files.length > 0 ? `
                             <div class="file-list mt-4">
