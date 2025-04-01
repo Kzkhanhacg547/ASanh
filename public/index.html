@@ -574,23 +574,146 @@
     .admission-nav a:hover::after {
         width: 60%;
     }
+
+    /* Chỉnh header cho mobile */
+    @media (max-width: 640px) {
+      header .container {
+        padding: 0.5rem;
+      }
+
+      .school-logo {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+
+      header h1 {
+        font-size: 1rem;
+      }
+
+      .admission-nav .container {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .admission-nav a {
+        padding: 0.4rem 0.8rem;
+        margin: 0.2rem;
+        font-size: 0.9rem;
+      }
+
+      nav button {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 0.8rem;
+      }
+
+      #darkModeToggle {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* Responsive form và cards */
+    @media (max-width: 640px) {
+      .auth-form {
+        width: 90%;
+        padding: 1.5rem;
+      }
+
+      .auth-form input, 
+      .auth-form button {
+        padding: 0.6rem;
+      }
+
+      .card-hover {
+        margin-bottom: 1rem;
+      }
+
+      #posts {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Styles cho menu mobile */
+    #mobileMenu {
+      transition: all 0.3s ease;
+    }
+
+    #mobileMenu.active {
+      display: block;
+    }
+
+    #mobileMenu > div {
+      transform: translateX(-100%);
+    }
+
+    #mobileMenu.active > div {
+      transform: translateX(0);
+    }
+
+    /* Media queries tổng thể */
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .media-container {
+        padding-top: 75%; /* Tỷ lệ tốt hơn cho mobile */
+      }
+
+      .file-list {
+        max-height: 50vh;
+      }
+
+      footer {
+        text-align: center;
+      }
+
+      footer div {
+        margin-bottom: 1.5rem;
+      }
+    }
 </style>
 </head>
 <body class="flex flex-col min-h-screen transition-colors duration-300">
     <header class="gradient-bg text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2 sm:space-x-4 p-3">
-                <div class="school-logo bg-white w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full shadow-sm">
-                    <img src="https://i.imgur.com/4Y68zbY.png" alt="School Logo" class="w-4/5 h-4/5 object-contain">
-                </div>
-                <h1 class="text-lg sm:text-2xl font-bold truncate">Trường THPT A Sanh</h1>
+        <!-- Thêm vào header -->
+        <div class="flex items-center space-x-2 sm:space-x-4 p-3">
+          <div class="school-logo bg-white w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full shadow-sm">
+            <img src="https://i.imgur.com/4Y68zbY.png" alt="School Logo" class="w-4/5 h-4/5 object-contain">
+          </div>
+          <h1 class="text-lg sm:text-2xl font-bold truncate">Trường THPT A Sanh</h1>
+        </div>
+        <nav class="hidden sm:flex space-x-4 items-center">
+          <button id="loginButton" class="btn bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Đăng nhập</button>
+          <button id="registerButton" class="btn bg-green-500 hover:bg-green-600 px-4 py-2 rounded">Đăng ký</button>
+          <button id="logoutButton" class="btn bg-red-500 hover:bg-red-600 px-4 py-2 rounded hidden">Đăng xuất</button>
+          <i id="darkModeToggle" class="fas fa-moon text-2xl ml-4"></i>
+        </nav>
+        <div class="sm:hidden">
+          <button id="mobileMenuBtn" class="text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+          </button>
+        </div>
+
+        <!-- Menu mobile -->
+        <div id="mobileMenu" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+          <div class="bg-white dark:bg-gray-800 h-full w-64 p-5 transform transition-transform duration-300">
+            <div class="flex justify-between items-center mb-5">
+              <h3 class="text-xl font-bold text-blue-800 dark:text-blue-400">Menu</h3>
+              <button id="closeMobileMenu" class="text-gray-500 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+              </button>
             </div>
-            <nav class="space-x-4 flex items-center">
-                <button id="loginButton" class="btn bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Đăng nhập</button>
-                <button id="registerButton" class="btn bg-green-500 hover:bg-green-600 px-4 py-2 rounded">Đăng ký</button>
-                <button id="logoutButton" class="btn bg-red-500 hover:bg-red-600 px-4 py-2 rounded hidden">Đăng xuất</button>
-                <i id="darkModeToggle" class="fas fa-moon text-2xl ml-4"></i>
-            </nav>
+            <div class="flex flex-col space-y-4">
+              <button id="mobileLoginButton" class="btn bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Đăng nhập</button>
+              <button id="mobileRegisterButton" class="btn bg-green-500 hover:bg-green-600 px-4 py-2 rounded">Đăng ký</button>
+              <button id="mobileLogoutButton" class="btn bg-red-500 hover:bg-red-600 px-4 py-2 rounded hidden">Đăng xuất</button>
+              <a href="/" class="py-2 border-b border-gray-200 dark:border-gray-700">Trang chủ</a>
+              <a href="/tuyensinh" class="py-2 border-b border-gray-200 dark:border-gray-700">Đăng ký tuyển sinh</a>
+              <a href="/news" class="py-2 border-b border-gray-200 dark:border-gray-700">Tin tức</a>
+              <a href="/contact" class="py-2 border-b border-gray-200 dark:border-gray-700">Liên hệ</a>
+            </div>
+          </div>
         </div>
     </header>
 
@@ -1224,5 +1347,42 @@
                             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
                         });
                     </script>
+
+
+    <script>
+        // Thêm đoạn JavaScript này vào phần cuối body
+        document.addEventListener('DOMContentLoaded', function() {
+          const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+          const closeMobileMenu = document.getElementById('closeMobileMenu');
+          const mobileMenu = document.getElementById('mobileMenu');
+          const mobileLoginButton = document.getElementById('mobileLoginButton');
+          const mobileRegisterButton = document.getElementById('mobileRegisterButton');
+          const mobileLogoutButton = document.getElementById('mobileLogoutButton');
+
+          mobileMenuBtn.addEventListener('click', function() {
+            mobileMenu.classList.add('active');
+          });
+
+          closeMobileMenu.addEventListener('click', function() {
+            mobileMenu.classList.remove('active');
+          });
+
+          // Đồng bộ trạng thái nút đăng nhập/đăng ký/đăng xuất
+          mobileLoginButton.addEventListener('click', function() {
+            document.getElementById('loginButton').click();
+            mobileMenu.classList.remove('active');
+          });
+
+          mobileRegisterButton.addEventListener('click', function() {
+            document.getElementById('registerButton').click();
+            mobileMenu.classList.remove('active');
+          });
+
+          mobileLogoutButton.addEventListener('click', function() {
+            document.getElementById('logoutButton').click();
+            mobileMenu.classList.remove('active');
+          });
+        });
+    </script>
                 </body>
                 </html>
