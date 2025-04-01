@@ -22,7 +22,7 @@
         .dark-mode {
             background-color: #1a1025;
             color: #f3e0ff;
-            background-image: url('https://scr.vn/wp-content/uploads/2020/07/N%E1%BB%81n-t%E1%BB%91i-%C4%91en-4k-scaled.jpg');
+            background-image: url('https://i.imgur.com/FHEmbS8.png');
         }
         
         .magical-card {
@@ -621,7 +621,7 @@
             if (posts.length === 0) {
                 postsContainer.innerHTML = `
                     <div class="text-center py-12 magical-card rounded-xl">
-                        <img src="https://i.imgur.com/q2sWLLI.gif" alt="Empty magic scroll" class="w-32 mx-auto mb-4">
+                        <img src="https://i.imgur.com/GzV1Xzs.png" alt="Empty magic scroll" class="w-32 mx-auto mb-4">
                         <p class="text-lg font-medium text-pink-600 dark:text-purple-300">
                             ✨ Chưa có thần chú nào được tạo ra ✨
                         </p>
@@ -647,7 +647,7 @@
                                     <h3 class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 dark:from-purple-400 dark:to-pink-400 font-bold text-lg">
                                         <i class="fas fa-sparkles mr-2"></i> ${post.title}
                                     </h3>
-                                    <p class="text-gray-700 dark:text-gray-300 my-3">${post.content}</p>
+                                    <p class="text-gray-700 dark:text-gray-300 my-3">${post.content.replace(/\n/g, '<br>')}</p>
                                     <p class="text-sm italic text-pink-400 dark:text-purple-300">
                                         <i class="fas fa-wand-magic-sparkles mr-1"></i> Phép thuật được tạo bởi 
                                         <span class="font-medium">${post.author}</span> vào 
