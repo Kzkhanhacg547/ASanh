@@ -1201,7 +1201,7 @@ app.put('/admissions/:index', async (req, res) => {
               <li>Mang theo bản gốc học bạ THCS và các giấy tờ liên quan</li>
               <li>Đóng lệ phí nhập học</li>
             </ol>
-            <p>Nếu có thắc mắc, vui lòng liên hệ với văn phòng tuyển sinh qua số điện thoại: 0123456789</p>
+            <p>Nếu có thắc mắc, vui lòng liên hệ với văn phòng tuyển sinh qua số điện thoại: 0987654321</p>
             <p>Trân trọng,<br>Ban Tuyển sinh Trường THPT A Sanh</p>
           `;
         } else if (status === 'Rejected') {
@@ -1212,7 +1212,7 @@ app.put('/admissions/:index', async (req, res) => {
             <p>Chúng tôi rất tiếc phải thông báo đơn đăng ký nhập học của bạn tại Trường THPT A Sanh đã không được chấp nhận.</p>
             <p>Lý do:</p>
             <p><em>${comments || 'Không đáp ứng đủ yêu cầu tuyển sinh của nhà trường'}</em></p>
-            <p>Nếu có thắc mắc, vui lòng liên hệ với văn phòng tuyển sinh qua số điện thoại: 0123456789</p>
+            <p>Nếu có thắc mắc, vui lòng liên hệ với văn phòng tuyển sinh qua số điện thoại: 0987654321</p>
             <p>Chúc bạn may mắn với các cơ hội học tập khác.</p>
             <p>Trân trọng,<br>Ban Tuyển sinh Trường THPT A Sanh</p>
           `;
